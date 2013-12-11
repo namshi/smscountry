@@ -1,0 +1,19 @@
+{
+    "name": "namshi/smscountry",
+    "description": "This small library provides support for sending Sms messages via Smscountry",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hossam Fares",
+            "email": "hossam.fares@namshi.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "3.7.21"
+    },
+    "autoload": {
+        "psr-0": {
+            "Namshi\\Smscountry": "src/"
+        }
+    }
+}
