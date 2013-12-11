@@ -5,13 +5,16 @@ This small library provides support for sending Sms messages via Smscountry
 
 ## Installation
 
-You can install this library via composer: have a look
-at the [package on packagist](https://packagist.org/packages/namshi/smscountry).
+Installation can be done via composer, as the
+library is already on [packagist](https://packagist.org/packages/namshi/smscountry).
 
-÷nclude it into your `composer.json`:
+The library uses semantic versioning for its API,
+so it is recommended to use a stable minor version
+(1.0, 1.1, etc.) and stick to it when declaring dependencies
+through composer:
 
 ```
-"namshi/smscountry": "1.0.*",
+"namshi/notificator": "1.0.*",
 ```
 
 Pick major and minor version according to your needs.

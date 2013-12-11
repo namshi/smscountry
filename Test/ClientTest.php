@@ -7,26 +7,39 @@ use \PHPUnit_Framework_TestCase;
 
 class ClientTest extends PHPUnit_Framework_TestCase
 {
-    protected $client;
     protected $username = 'user';
     protected $password = 'password';
     protected $senderId = 'sender';
     protected $serviceWsdlUrl = 'http://www.smscountry.com/service.asmx?WSDL';
 
-    public function setUp()
-    {
-        $this->client = new Client($this->username, $this->password, $this->senderId, $this->serviceWsdlUrl);
-    }
-
-    public function testCreationOfTheClient()
-    {
-        $this->assertInstanceOf("Namshi\\SmsCountry\\Client", $this->client);
-    }
-
     public function testSendingSmsWithInvalidCredentials()
+    {
+
+        $client      = new Client($this->username, $this->password, $this->senderId, $this->serviceWsdlUrl);
+        $phoneNumber = '12345678';
+        $message     = 'this is our message';
+
+        $this->assertInstanceOf("Namshi\\SmsCountry\\Client", $client);
+        $this->assertFalse($client->sendSms($phoneNumber, $message));
+    }
+
+    public function testSendingValidRequest()
     {
         $phoneNumber = '12345678';
         $message     = 'this is our message';
-        $this->assertFalse($this->client->sendSms($phoneNumber, $message));
+
+        $clientMock = $this->getMock(
+            "Namshi\\SmsCountry\\Client",
+            array('sendSms'),
+            array(
+                $this->username,
+                $this->password,
+                $this->senderId,
+                $this->serviceWsdlUrl
+            )
+        );
+
+        $clientMock->expects($this->any())->method('sendSms')->will($this->returnValue(true));
+        $this->assertTrue($clientMock->sendSms($phoneNumber, $message));
     }
 }
