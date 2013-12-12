@@ -15,8 +15,5 @@
         "psr-0": {
             "Namshi\\Smscountry": "src/"
         }
-    },
-    "target-dir": "Namshi/Smscountry",
-    "prefer-stable": true,
-    "minimum-stability": "stable"
+    }
 }
