@@ -1,7 +1,7 @@
-# NAMSHI | Smscountry
+# NAMSHI | SMSCountry
 
 
-This small library provides support for sending Sms messages via Smscountry
+This small library provides support for sending Sms messages via SMSCountry
 
 ## Installation
 
@@ -14,7 +14,7 @@ so it is recommended to use a stable minor version
 through composer:
 
 ```
-"namshi/notificator": "1.0.*",
+"namshi/smscountry": "1.0.*",
 ```
 
 Pick major and minor version according to your needs.
@@ -26,7 +26,7 @@ Using this library is super easy:
 ``` php
 <?php
 
-use Namshi\Smscountry\Client;
+use Namshi\SMSCountry\Client;
 
 $smsClient = new Client($username, $password, $senderId, $serviceWsdlUrl);
 
