@@ -1,8 +1,8 @@
 <?php
 
-namespace Namshi\SmsCountry\Test;
+namespace Namshi\SMSCountry\Test;
 
-use Namshi\Smscountry\Client;
+use Namshi\SMSCountry\Client;
 use \PHPUnit_Framework_TestCase;
 
 class ClientTest extends PHPUnit_Framework_TestCase
@@ -19,7 +19,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $phoneNumber = '12345678';
         $message     = 'this is our message';
 
-        $this->assertInstanceOf("Namshi\\SmsCountry\\Client", $client);
+        $this->assertInstanceOf("Namshi\\SMSCountry\\Client", $client);
         $this->assertFalse($client->sendSms($phoneNumber, $message));
     }
 
@@ -29,7 +29,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $message     = 'this is our message';
 
         $clientMock = $this->getMock(
-            "Namshi\\SmsCountry\\Client",
+            "Namshi\\SMSCountry\\Client",
             array('sendSms'),
             array(
                 $this->username,

@@ -1,5 +1,5 @@
 <?php
-namespace Namshi\Smscountry;
+namespace Namshi\SMSCountry;
 
 class Client
 {
