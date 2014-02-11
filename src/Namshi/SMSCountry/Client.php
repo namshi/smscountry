@@ -21,7 +21,7 @@ class Client
 
     public function sendSms($phoneNumber, $body)
     {
-        $response = $this->getSoapClient()->SendTextSMS(
+        $response = $this->getSoapClient()->SendUnicodeSMS(
             array(
                 'username'      => $this->getUsername(),
                 'password'      => $this->getPassword(),
@@ -31,7 +31,7 @@ class Client
             )
         );
 
-        return is_int($response->SendTextSMSResult);
+        return is_int($response->SendUnicodeSMSResult);
     }
 
     /**
