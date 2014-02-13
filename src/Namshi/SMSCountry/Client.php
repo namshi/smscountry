@@ -3,7 +3,35 @@ namespace Namshi\SMSCountry;
 
 class Client
 {
-    protected $username, $password, $senderId, $serviceWsdlUrl, $soapClient;
+    /**
+     * @string username
+     */
+    protected $username;
+
+    /**
+     * @string  password
+     */
+    protected $password;
+
+    /**
+     * @string senderId
+     */
+    protected $senderId;
+
+    /**
+     * @string serviceWsdlUrl
+     */
+    protected $serviceWsdlUrl;
+
+    /**
+     * @SoapClient soapClient
+     */
+    protected $soapClient;
+
+    /**
+     * @var array of stripped chars on phone number
+     */
+    protected $phoneNumberStrippedChars = array(' ', '_', '-', '[', ']', '(', ')', '+');
 
     /**
      * @param $username
@@ -19,23 +47,42 @@ class Client
         $this->setServiceWsdlUrl($serviceWsdlUrl);
     }
 
+    /**
+     * @param $phoneNumber
+     * @param $body
+     *
+     * @return SendUnicodeSMSResult
+     */
     public function sendSms($phoneNumber, $body)
     {
-        $response = $this->getSoapClient()->SendUnicodeSMS(
+        $normalizedPhone = $this->normalizePhoneNumber($phoneNumber);
+        $response        = $this->getSoapClient()->SendUnicodeSMS(
             array(
                 'username'      => $this->getUsername(),
                 'password'      => $this->getPassword(),
-                'mobilenumbers' => $phoneNumber,
+                'mobilenumbers' => $normalizedPhone,
                 'message'       => $body,
                 'senderID'      => $this->getSenderId()
             )
         );
 
-        return is_int($response->SendUnicodeSMSResult);
+        return $response;
     }
 
     /**
-     * @param mixed $password
+     * Normalize Phone by removing unnecessary chars
+     *
+     * @param $phone
+     *
+     * @return string
+     */
+    protected function normalizePhoneNumber($phone)
+    {
+        return str_replace($this->phoneNumberStrippedChars, '', $phone);
+    }
+
+    /**
+     * @param string $password
      */
     public function setPassword($password)
     {
@@ -43,7 +90,7 @@ class Client
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPassword()
     {
@@ -51,7 +98,7 @@ class Client
     }
 
     /**
-     * @param mixed $senderId
+     * @param string $senderId
      */
     public function setSenderId($senderId)
     {
@@ -59,7 +106,7 @@ class Client
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSenderId()
     {
@@ -67,7 +114,7 @@ class Client
     }
 
     /**
-     * @param mixed $serviceWsdlUrl
+     * @param string $serviceWsdlUrl
      */
     public function setServiceWsdlUrl($serviceWsdlUrl)
     {
@@ -76,7 +123,7 @@ class Client
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getServiceWsdlUrl()
     {
@@ -100,7 +147,7 @@ class Client
     }
 
     /**
-     * @param mixed $soapClient
+     * @param \SoapClient $soapClient
      */
     protected function setSoapClient($soapClient)
     {
@@ -108,7 +155,7 @@ class Client
     }
 
     /**
-     * @return mixed
+     * @return \SoapClient
      */
     public function getSoapClient()
     {
