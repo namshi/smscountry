@@ -77,7 +77,8 @@ class Client
      *
      * @return bool
      */
-    protected function isUnicodeString($string){
+    protected function isUnicodeString($string)
+    {
         return strlen($string) != strlen(utf8_decode($string));
     }
 
