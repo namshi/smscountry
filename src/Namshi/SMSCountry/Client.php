@@ -1,6 +1,8 @@
 <?php
 namespace Namshi\SMSCountry;
 
+use \SoapClient;
+
 class Client
 {
     /**
@@ -19,12 +21,7 @@ class Client
     protected $senderId;
 
     /**
-     * @string serviceWsdlUrl
-     */
-    protected $serviceWsdlUrl;
-
-    /**
-     * @SoapClient soapClient
+     * @var SoapClient
      */
     protected $soapClient;
 
@@ -37,36 +34,52 @@ class Client
      * @param $username
      * @param $password
      * @param $senderId
-     * @param $serviceWsdlUrl
+     * @param $soapClient
      */
-    public function __construct($username, $password, $senderId, $serviceWsdlUrl)
+    public function __construct($username, $password, $senderId, SoapClient $soapClient)
     {
         $this->setUsername($username);
         $this->setPassword($password);
         $this->setSenderId($senderId);
-        $this->setServiceWsdlUrl($serviceWsdlUrl);
+        $this->setSoapClient($soapClient);
     }
 
     /**
-     * @param $phoneNumber
-     * @param $body
+     * Sends a `$body` message to a normalized `$phoneNumber`
+     * using the appropriate soap method based on the
+     * content of the message (simple text or unicode).
      *
-     * @return SendUnicodeSMSResult
+     * @param string $phoneNumber
+     * @param string $body
+     *
+     * @return bool
      */
     public function sendSms($phoneNumber, $body)
     {
-        $normalizedPhone = $this->normalizePhoneNumber($phoneNumber);
-        $response        = $this->getSoapClient()->SendUnicodeSMS(
-            array(
-                'username'      => $this->getUsername(),
-                'password'      => $this->getPassword(),
-                'mobilenumbers' => $normalizedPhone,
-                'message'       => $body,
-                'senderID'      => $this->getSenderId()
-            )
+        $normalizedPhone   = $this->normalizePhoneNumber($phoneNumber);
+        $smsData           = array(
+            'username'      => $this->getUsername(),
+            'password'      => $this->getPassword(),
+            'mobilenumbers' => $normalizedPhone,
+            'message'       => $body,
+            'senderID'      => $this->getSenderId()
         );
+        $soapServiceMethod = $this->isUnicodeString($body) ? 'SendUnicodeSMS' : 'SendTextSMS';
+        $response          = $this->getSoapClient()->$soapServiceMethod($smsData);
 
-        return $response;
+        return $response->{$soapServiceMethod . 'Response'};
+    }
+
+    /**
+     * Check if `$string` contains unicode characters.
+     *
+     * @param $string
+     *
+     * @return bool
+     */
+    protected function isUnicodeString($string)
+    {
+        return strlen($string) != strlen(utf8_decode($string));
     }
 
     /**
@@ -114,23 +127,6 @@ class Client
     }
 
     /**
-     * @param string $serviceWsdlUrl
-     */
-    public function setServiceWsdlUrl($serviceWsdlUrl)
-    {
-        $this->serviceWsdlUrl = $serviceWsdlUrl;
-        $this->setSoapClient(new \SoapClient($serviceWsdlUrl));
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceWsdlUrl()
-    {
-        return $this->serviceWsdlUrl;
-    }
-
-    /**
      * @param mixed $username
      */
     public function setUsername($username)
@@ -147,15 +143,15 @@ class Client
     }
 
     /**
-     * @param \SoapClient $soapClient
+     * @param SoapClient $soapClient
      */
-    protected function setSoapClient($soapClient)
+    protected function setSoapClient(SoapClient $soapClient)
     {
         $this->soapClient = $soapClient;
     }
 
     /**
-     * @return \SoapClient
+     * @return SoapClient
      */
     public function getSoapClient()
     {

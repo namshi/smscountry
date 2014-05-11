@@ -1,5 +1,5 @@
 # NAMSHI | SMSCountry
-
+[![Build Status](https://travis-ci.org/namshi/smscountry.svg?branch=master)](https://travis-ci.org/namshi/smscountry)
 
 This small library provides support for sending Sms messages via SMSCountry
 
@@ -28,7 +28,7 @@ Using this library is super easy:
 
 use Namshi\SMSCountry\Client;
 
-$smsClient = new Client($username, $password, $senderId, $serviceWsdlUrl);
+$smsClient = new Client($username, $password, $senderId, $soapService);
 
 $smsClient->sendSms($phoneNumber, $body);
 
