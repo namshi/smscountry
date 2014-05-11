@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/namshi/smscountry.svg?branch=master)](https://travis-ci.org/namshi/smscountry)
-
 # NAMSHI | SMSCountry
+[![Build Status](https://travis-ci.org/namshi/smscountry.svg?branch=master)](https://travis-ci.org/namshi/smscountry)
 
 This small library provides support for sending Sms messages via SMSCountry
 

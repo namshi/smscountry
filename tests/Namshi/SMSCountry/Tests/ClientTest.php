@@ -30,35 +30,10 @@ class ClientTest extends PHPUnit_Framework_TestCase
         $this->client     = $this->getClient();
     }
 
-    public function testPhoneNumberIsNormalized()
-    {
-
-        $normalizePhoneNumberMethod = self::getClientMethod('normalizePhoneNumber');
-        $processedPhoneNumber       = $normalizePhoneNumberMethod->invokeArgs($this->client, array($this->phoneNumber));
-
-        $this->assertEquals($this->normalizedPhoneNumber, $processedPhoneNumber);
-    }
-
-    public function testNonUnicodeStringIsRecognized()
-    {
-
-        $isUnicodeStringMethod = self::getClientMethod('isUnicodeString');
-        $isUnicodeString       = $isUnicodeStringMethod->invokeArgs($this->client, array($this->nonUnicodeString));
-
-        $this->assertEquals($isUnicodeString, false);
-    }
-
-    public function testUnicodeStringIsRecognized()
-    {
-
-        $isUnicodeStringMethod = self::getClientMethod('isUnicodeString');
-        $isUnicodeString       = $isUnicodeStringMethod->invokeArgs($this->client, array($this->unicodeString));
-
-        $this->assertEquals($isUnicodeString, true);
-    }
-
     public function testSendingNonUnicodeMessageCallsSendTextSmsSoapMethod()
     {
+        $textResponse = (object)array("SendTextSMSResponse" => true);
+
         $this->clientMock->expects($this->once())
                          ->method('SendTextSMS')
                          ->with(array(
@@ -68,13 +43,16 @@ class ClientTest extends PHPUnit_Framework_TestCase
                                     "message"       => $this->nonUnicodeString,
                                     "senderID"      => $this->senderId
                                 )
-            );
+            )
+                         ->will($this->returnValue($textResponse));
 
         $this->client->sendSms($this->phoneNumber, $this->nonUnicodeString);
     }
 
     public function testSendingUnicodeMessageCallsSendUnicodeSMSSoapMethod()
     {
+        $unicodeResponse = (object)array("SendUnicodeSMSResponse" => true);
+
         $this->clientMock->expects($this->once())
                          ->method('SendUnicodeSMS')
                          ->with(array(
@@ -84,7 +62,8 @@ class ClientTest extends PHPUnit_Framework_TestCase
                                     "message"       => $this->unicodeString,
                                     "senderID"      => $this->senderId
                                 )
-            );
+            )
+                         ->will($this->returnValue($unicodeResponse));
 
         $this->client->sendSms($this->phoneNumber, $this->unicodeString);
     }
@@ -95,14 +74,5 @@ class ClientTest extends PHPUnit_Framework_TestCase
     protected function getClient()
     {
         return new Client($this->username, $this->password, $this->senderId, $this->clientMock);
-    }
-
-    protected static function getClientMethod($name)
-    {
-        $class  = new ReflectionClass('Namshi\SMSCountry\Client');
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-
-        return $method;
     }
 }
