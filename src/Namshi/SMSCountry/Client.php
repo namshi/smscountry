@@ -1,6 +1,8 @@
 <?php
 namespace Namshi\SMSCountry;
 
+use \SoapClient;
+
 class Client
 {
     /**
@@ -19,12 +21,7 @@ class Client
     protected $senderId;
 
     /**
-     * @string serviceWsdlUrl
-     */
-    protected $serviceWsdlUrl;
-
-    /**
-     * @SoapClient soapClient
+     * @var SoapClient
      */
     protected $soapClient;
 
@@ -37,21 +34,21 @@ class Client
      * @param $username
      * @param $password
      * @param $senderId
-     * @param $serviceWsdlUrl
+     * @param $soapClient
      */
-    public function __construct($username, $password, $senderId, $serviceWsdlUrl)
+    public function __construct($username, $password, $senderId, SoapClient $soapClient)
     {
         $this->setUsername($username);
         $this->setPassword($password);
         $this->setSenderId($senderId);
-        $this->setServiceWsdlUrl($serviceWsdlUrl);
+        $this->setSoapClient($soapClient);
     }
 
     /**
      * @param $phoneNumber
      * @param $body
      *
-     * @return SendUnicodeSMSResult
+     * @return bool
      */
     public function sendSms($phoneNumber, $body)
     {
@@ -114,23 +111,6 @@ class Client
     }
 
     /**
-     * @param string $serviceWsdlUrl
-     */
-    public function setServiceWsdlUrl($serviceWsdlUrl)
-    {
-        $this->serviceWsdlUrl = $serviceWsdlUrl;
-        $this->setSoapClient(new \SoapClient($serviceWsdlUrl));
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceWsdlUrl()
-    {
-        return $this->serviceWsdlUrl;
-    }
-
-    /**
      * @param mixed $username
      */
     public function setUsername($username)
@@ -147,15 +127,15 @@ class Client
     }
 
     /**
-     * @param \SoapClient $soapClient
+     * @param SoapClient $soapClient
      */
-    protected function setSoapClient($soapClient)
+    protected function setSoapClient(SoapClient $soapClient)
     {
         $this->soapClient = $soapClient;
     }
 
     /**
-     * @return \SoapClient
+     * @return SoapClient
      */
     public function getSoapClient()
     {
