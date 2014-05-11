@@ -28,7 +28,7 @@ Using this library is super easy:
 
 use Namshi\SMSCountry\Client;
 
-$smsClient = new Client($username, $password, $senderId, $serviceWsdlUrl);
+$smsClient = new Client($username, $password, $senderId, $soapService);
 
 $smsClient->sendSms($phoneNumber, $body);
 

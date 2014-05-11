@@ -45,25 +45,40 @@ class Client
     }
 
     /**
-     * @param $phoneNumber
-     * @param $body
+     * Sends a `$body` message to a normalized `$phoneNumber`
+     * using the appropriate soap method based on the
+     * content of the message (simple text or unicode).
+     *
+     * @param string $phoneNumber
+     * @param string $body
      *
      * @return bool
      */
     public function sendSms($phoneNumber, $body)
     {
-        $normalizedPhone = $this->normalizePhoneNumber($phoneNumber);
-        $response        = $this->getSoapClient()->SendUnicodeSMS(
-            array(
-                'username'      => $this->getUsername(),
-                'password'      => $this->getPassword(),
-                'mobilenumbers' => $normalizedPhone,
-                'message'       => $body,
-                'senderID'      => $this->getSenderId()
-            )
+        $normalizedPhone   = $this->normalizePhoneNumber($phoneNumber);
+        $smsData           = array(
+            'username'      => $this->getUsername(),
+            'password'      => $this->getPassword(),
+            'mobilenumbers' => $normalizedPhone,
+            'message'       => $body,
+            'senderID'      => $this->getSenderId()
         );
+        $soapServiceMethod = $this->isUnicodeString($body) ? 'SendUnicodeSMS' : 'SendTextSMS';
+        $response          = $this->getSoapClient()->$soapServiceMethod($smsData);
 
         return $response;
+    }
+
+    /**
+     * Check if `$string` contains unicode characters.
+     *
+     * @param $string
+     *
+     * @return bool
+     */
+    protected function isUnicodeString($string){
+        return strlen($string) != strlen(utf8_decode($string));
     }
 
     /**
