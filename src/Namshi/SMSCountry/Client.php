@@ -67,7 +67,7 @@ class Client
         $soapServiceMethod = $this->isUnicodeString($body) ? 'SendUnicodeSMS' : 'SendTextSMS';
         $response          = $this->getSoapClient()->$soapServiceMethod($smsData);
 
-        return $response->{$soapServiceMethod . 'Response'};
+        return $response->{$soapServiceMethod . 'Result'};
     }
 
     /**

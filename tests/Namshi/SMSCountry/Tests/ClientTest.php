@@ -32,7 +32,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     public function testSendingNonUnicodeMessageCallsSendTextSmsSoapMethod()
     {
-        $textResponse = (object)array("SendTextSMSResponse" => true);
+        $textResponse = (object)array("SendTextSMSResult" => true);
 
         $this->clientMock->expects($this->once())
                          ->method('SendTextSMS')
@@ -51,7 +51,7 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     public function testSendingUnicodeMessageCallsSendUnicodeSMSSoapMethod()
     {
-        $unicodeResponse = (object)array("SendUnicodeSMSResponse" => true);
+        $unicodeResponse = (object)array("SendUnicodeSMSResult" => true);
 
         $this->clientMock->expects($this->once())
                          ->method('SendUnicodeSMS')
